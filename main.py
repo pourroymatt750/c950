@@ -105,7 +105,7 @@ def deliver_packages(truck):
     # Keeps track of and calculates current miles driven
     total_miles = 0.0
     curr_time = truck.start_time
-    print(truck.start_time)
+    # print(truck.start_time)
 
     closest_address = "HUB"
     while len(truck.package_list) > 0:
@@ -125,7 +125,7 @@ def deliver_packages(truck):
         closest_package.delivery_time = curr_time
         closest_package.departure_time = truck.start_time
         closest_package.truck_id = truck.truck_id
-        print(curr_time, closest_distance, closest_package)
+        # print(curr_time, closest_distance, closest_package)
         truck.package_list.remove(closest_package)
         total_miles += closest_distance
     return curr_time, total_miles
@@ -137,11 +137,10 @@ truck3.start_time = truck1_completed
 truck3_completed, truck3_total_miles = deliver_packages(truck3)
 total_miles = truck1_total_miles + truck2_total_miles + truck3_total_miles
 
-# Prints total miles driven
-print(f"Total Miles: {math.ceil(total_miles)}")
 
-h, m = input("Enter a time (hh:mm)").split(':')
-input_time = datetime.timedelta(hours=int(h), minutes=int(m))
+h, m = input("Enter a start time (hh:mm)").split(':')
+h2, m2 = input("Enter an end time (hh:mm)").split(':')
+input_time = datetime.timedelta(hours=int(h2), minutes=int(m2))
 
 try:
     package_ids = [int(input("Enter a Package ID: "))]
@@ -151,3 +150,5 @@ for package_id in package_ids:
     package = myHash.search(package_id)
     package.update_status(input_time)
     print(str(package))
+# Prints total miles driven
+print(f"Total Miles: {math.ceil(total_miles)}")
