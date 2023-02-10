@@ -9,7 +9,10 @@ class ChainingHashTable:
         for i in range(initial_capacity):
             self.table.append([])
 
-    # Inserts a new item into the hash table.
+    """
+    Inserts a new item into the hash table. Avg space-time complexity is O(1). Worst case is O(N).
+    """
+
     def insert(self, key, item):
         # get the bucket list where this item will go.
         bucket = hash(key) % len(self.table)
@@ -26,8 +29,13 @@ class ChainingHashTable:
         bucket_list.append(key_value)
         return True
 
-    # Searches for an item with matching key in the hash table.
-    # Returns the item if found, or None if not found.
+    """
+    Searches for an item with matching key in the hash table. Returns the item if found, or None if not found. 
+    Avg space-time complexity is O(1) when all chains are equal length. Worst case is O(N) if all elements are one 
+    single linked list. So, the search algorithm must traverse the entire linked list and check every node to yield 
+    proper search results.
+    """
+
     def search(self, key):
         # get the bucket list where this key would be.
         bucket = hash(key) % len(self.table)
@@ -40,7 +48,10 @@ class ChainingHashTable:
                 return kv[1]
         return None
 
-    # Removes an item with matching key from the hash table.
+    """
+    Removes an item with matching key from the hash table. Avg space-time complexity is O(1). Worst case is O(N).
+    """
+
     def remove(self, key):
         # get the bucket list where this item will be removed from.
         bucket = hash(key) % len(self.table)
@@ -50,4 +61,3 @@ class ChainingHashTable:
         for kv in bucket_list:
             if kv[0] == key:
                 bucket_list.remove([kv[0], kv[1]])
-
