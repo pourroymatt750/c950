@@ -25,7 +25,7 @@ truck1_packages = []
 truck2_packages = []
 truck3_packages = []
 # Creates instance of the 3 truck objects: Truck 1, Truck 2, Truck 3
-truck1 = Truck(1, truck1_packages, datetime.timedelta(hours=8))
+truck1 = Truck(1, truck1_packages, datetime.timedelta(hours=8, minutes=10))
 truck2 = Truck(2, truck2_packages, datetime.timedelta(hours=9, minutes=10))
 truck3 = Truck(3, truck3_packages, None)
 
@@ -42,10 +42,9 @@ def load_package_data(filename):
             p_zip_code = package[4]
             p_deadline = package[5]
             p_weight = package[6]
-            p_note = package[7]
 
             # package object
-            p = Package(p_ID, p_address, p_city, p_state, p_zip_code, p_deadline, p_weight, p_note)
+            p = Package(p_ID, p_address, p_city, p_state, p_zip_code, p_deadline, p_weight)
 
             # Insert statement to insert packages into the "myHash" hash table
             myHash.insert(p_ID, p)
@@ -62,17 +61,17 @@ def load_package_data(filename):
                 truck1_packages.append(p)
                 continue
 
-            if p_ID in [1, 3, 6, 9, 18, 28, 30, 32, 36, 38]:
+            if p_ID in [1, 3, 6, 18, 28, 30, 32, 36, 38]:
                 truck2_packages.append(p)
                 continue
 
-            if p_ID == 25:
+            if p_ID == 9 or p_ID == 25:
                 truck3_packages.append(p)
                 continue
 
             if len(truck1_packages) < 5:
                 truck1_packages.append(p)
-            elif len(truck2_packages) < 8:
+            elif len(truck2_packages) < 9:
                 truck2_packages.append(p)
             else:
                 truck3_packages.append(p)
@@ -158,6 +157,7 @@ def deliver_packages(truck):
         """
         curr_time = curr_time + datetime.timedelta(hours=closest_distance / 18)
         closest_package.delivery_time = curr_time
+        closest_package.delivery_status = 'Delivered'
         closest_package.departure_time = truck.start_time
         closest_package.truck_id = truck.truck_id
         # Removes a package from the truck once it's delivered
@@ -177,25 +177,56 @@ truck3.start_time = truck1_completed
 truck3_completed, truck3_total_miles = deliver_packages(truck3)
 total_miles = truck1_total_miles + truck2_total_miles + truck3_total_miles
 
-# Takes input for start and end times
-h, m = input("Enter a start time (hh:mm)").split(':')
-h2, m2 = input("Enter an end time (hh:mm)").split(':')
-input_time = datetime.timedelta(hours=int(h2), minutes=int(m2))
+print("1: All package information")
+print("2: Enter a time to see all packages at that time")
+print("3: Enter a Time and Package ID to see information at that time")
 
-"""
-Try: Looks for a Package ID that entered, if it finds it, it returns the Package with that ID, 
-Except: otherwise returns all packages within time frame entered along with total miles traveled by all the trucks. 
-"""
-try:
-    package_ids = [int(input("Enter a Package ID: "))]
-except:
+choice = input("Select 1-4: ")
+
+if choice == '1':
     package_ids = range(1, 41)
-    print(f"Truck 1 Departure: {truck1.start_time}")
-    print(f"Truck 2 Departure: {truck2.start_time}")
-    print(f"Truck 3 Departure: {truck3.start_time}")
-for package_id in package_ids:
-    package = myHash.search(package_id)
-    package.update_status(input_time)
-    print(str(package))
-# Prints total miles driven
-print(f"Total Miles: {math.ceil(total_miles)}")
+    for package_id in package_ids:
+        package = myHash.search(package_id)
+        print(str(package))
+    # Prints total miles driven
+    print(f"Total Miles: {math.ceil(total_miles)}")
+if choice == '2':
+    h, m = input("Enter a start time (hh:mm)").split(':')
+    input_time = datetime.timedelta(hours=int(h), minutes=int(m))
+    package_ids = range(1, 41)
+
+    for package_id in package_ids:
+        package = myHash.search(package_id)
+        package.update_status(input_time)
+        if input_time < package.departure_time:
+            print("%s, %s, %s, %s, %s, %s, Truck %s, Departure Time: %s, Delivery Time:, Delivery Status: HUB, "
+                  "Deadline: %s" % (
+                      package.ID, package.address, package.city, package.state, package.zip_code, package.weight,
+                      package.truck_id, package.departure_time, package.deadline))
+        elif package.departure_time < input_time < package.delivery_time:
+            print("%s, %s, %s, %s, %s, %s, Truck %s, Departure Time: %s, Delivery Time:, Delivery Status: En Route, "
+                  "Deadline: %s" % (
+                      package.ID, package.address, package.city, package.state, package.zip_code, package.weight,
+                      package.truck_id, package.departure_time, package.deadline))
+        else:
+            print(package)
+if choice == '3':
+    h, m = input("Enter a start time (hh:mm)").split(':')
+    input_time = datetime.timedelta(hours=int(h), minutes=int(m))
+
+    """
+    Try: Looks for a Package ID that entered, if it finds it, it returns the Package with that ID, 
+    Except: otherwise returns all packages within time frame entered along with total miles traveled by all the trucks. 
+    """
+    try:
+        package_ids = [int(input("Enter a Package ID: "))]
+    except:
+        package_ids = range(1, 41)
+        print(f"Truck 1 Departure: {truck1.start_time}")
+        print(f"Truck 2 Departure: {truck2.start_time}")
+        print(f"Truck 3 Departure: {truck3.start_time}")
+    for package_id in package_ids:
+        package = myHash.search(package_id)
+        package.update_status(input_time)
+        print(str(package))
+
