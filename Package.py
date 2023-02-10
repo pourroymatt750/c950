@@ -20,7 +20,7 @@ class Package:
         #     self.deadline, self.delivery_time, self.weight,
         #     self.delivery_status, self.truck_id)
 
-        return "%s, %s, %s, %s, %s, %s, Truck ID: %s, Departure Time: %s, %s , Deadline: %s" % (
+        return "%s, %s, %s, %s, %s, %s, Truck %s, Departure Time: %s, %s , Deadline: %s" % (
             self.ID, self.address, self.city, self.state, self.zip_code, self.weight,
             self.truck_id, self.departure_time, self.delivery_status, self.deadline)
 
