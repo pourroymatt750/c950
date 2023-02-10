@@ -89,9 +89,9 @@ with open("wgups/distance_table.csv") as distance_table:
         distances.append(row)
 
 
-# print(len(truck1_packages))
-# print(len(truck2_packages))
-# print(len(truck3_packages))
+print(len(truck1_packages))
+print(len(truck2_packages))
+print(len(truck3_packages))
 
 # Function to get index of the given address to be able to find it in the distance_table.csv
 def get_index_for_address(address):
@@ -181,7 +181,7 @@ print("1: All package information")
 print("2: Enter a time to see all packages at that time")
 print("3: Enter a Time and Package ID to see information at that time")
 
-choice = input("Select 1-4: ")
+choice = input("Select 1-3: ")
 
 if choice == '1':
     package_ids = range(1, 41)
